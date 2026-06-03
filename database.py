@@ -6,10 +6,99 @@ conn = psycopg2.connect(host='localhost',port=5432,user='postgres',password='mur
 # Cur object
 cur = conn.cursor()
 
-cur.execute("select * from products")
-products_table = cur.fetchall()
-print(products_table)
+def get_products():
+    cur.execute("select * from products")
+    products_data = cur.fetchall()
+    return products_data
 
-cur.execute("select * from sales")
-sales_table = cur.fetchall()
-print(sales_table)
+def get_sales():
+    cur.execute("select * from sales")
+    sales_data = cur.fetchall()
+    return sales_data
+
+def get_data(table):
+    cur.execute(f"select * from {table}")
+    data = cur.fetchall()
+    return data
+
+# Method 1
+# Susceptible to sql injection:
+
+def insert_products(values):
+    cur.execute(f"insert into products(name,buying_price,selling_price)values{values}")
+    conn.commit()
+
+product1=('shoes',2500,3000)
+product2=('phone',10000,17000)
+product3=('biscuits',150,360)
+product4=('flour',2500,4000)
+product5=('rice',4500,6200)
+
+# insert_products(product1)
+# insert_products(product2)
+# insert_products(product3)
+# insert_products(product4)
+# insert_products(product5)
+
+products_data=get_products()
+print(products_data)
+
+# Method 2
+# Not susceptible to sql injection, hence more secure:
+
+def insert_products2(values):
+    cur.execute("insert into products(name,buying_price,selling_price)values(%s,%s,%s)",values)
+    conn.commit()
+
+product6=('laptop',50000,75000)
+# insert_products2(product6)
+
+print(products_data)
+
+# NB: %s is a placeholder
+
+# Task 1.Using functions write code to: 
+# -> get_stock() 
+
+def get_stocks():
+    cur.execute("select * from stock")
+    stocks_data = cur.fetchall()
+    return stocks_data
+
+stocks_data = get_stocks()
+print(stocks_data)
+
+# -> insert sales() 
+
+def insert_sales(values):
+    cur.execute("insert into sales(pid,quantity)values(%s,%s)",values)
+    conn.commit()
+
+sales1=(1,5)
+sales2=(2,7)
+sales3=(3,23)
+
+
+# insert_sales(sales1)
+# insert_sales(sales2)
+# insert_sales(sales3)
+
+
+sales_data=get_sales()
+print(sales_data)
+
+# -> insert_stock()
+def insert_stock(values):
+    cur.execute("insert into stock(pid,stock_quantity)values(%s,%s)",values)
+    conn.commit()
+
+stock1=(1,27)
+stock2=(2,35)
+stock3=(3,56)
+
+# insert_stock(stock1)
+# insert_stock(stock2)
+# insert_stock(stock3)
+
+stocks_data = get_stocks()
+print(stocks_data)
