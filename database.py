@@ -102,3 +102,39 @@ stock3=(3,56)
 
 stocks_data = get_stocks()
 print(stocks_data)
+
+def sales_per_day():
+    cur.execute("""
+        SELECT DATE(sales.created_at) AS sale_date, SUM(sales.quantity * products.selling_price) 
+        AS sales_per_day FROM sales JOIN products ON sales.pid = products.id 
+        GROUP BY DATE(created_at) ORDER BY sale_date; 
+
+""")
+    daily_sales=cur.fetchall()
+    return daily_sales
+
+def profit_per_day():
+    cur.execute("""
+        SELECT DATE(sales.created_at) AS sale_date, 
+        SUM((products.selling_price - products.buying_price) * sales.quantity) 
+        AS profit_per_day FROM sales JOIN products ON sales.pid = products.id 
+        GROUP BY DATE(created_at) ORDER BY sale_date;
+""")
+    daily_profit=cur.fetchall()
+    return daily_profit
+
+def sales_per_product():
+    cur.execute("""
+        SELECT name, SUM(sales.quantity) AS sales_per_product FROM sales
+        JOIN products ON sales.pid = products.id GROUP BY name;
+""")
+    product_sales=cur.fetchall()
+    return product_sales
+
+def profit_per_product():
+    cur.execute("""
+        SELECT name, SUM((products.selling_price - products.buying_price) * sales.quantity) 
+        AS profit_per_product FROM sales JOIN products ON sales.pid = products.id GROUP BY name;
+""")
+    product_profit=cur.fetchall()
+    return product_profit
