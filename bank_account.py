@@ -1,5 +1,10 @@
+from datetime import datetime
+
+today = datetime.today()
+print(today)
+
 class BankAccount:
-    def __init__(self,account_number,balance,owner_name,date_opened):
+    def __init__(self,account_number,balance,owner_name,date_opened=today):
         self.account_number = account_number
         self.balance = balance
         self.owner_name = owner_name
@@ -31,7 +36,7 @@ class BankAccount:
         print("________________________________________")
 
 # Object 1:
-owner1=BankAccount("B10001",50000,"Sophia Janet","12/05/2014")
+owner1=BankAccount("B10001",50000,"Sophia Janet")
 print(type(owner1))
 
 deposit_amount = float(input("Enter deposit amount: "))
@@ -45,7 +50,7 @@ owner1.display_info()
 owner1.close_account()
 
 # Object 2:
-owner2=BankAccount("B10002",135000,"Evaline Kate","09/03/2018")
+owner2=BankAccount("B10002",135000,"Evaline Kate")
 print(type(owner2))
 
 deposit_amount = float(input("Enter deposit amount: "))
