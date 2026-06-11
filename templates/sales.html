@@ -7,4 +7,30 @@
     <p>This is the sales page</p>
 </div>
 
+<div>
+    <div>
+        <table id="example" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Sales ID</th>
+                    <th>Product ID</th>
+                    <th>Quantity</th>
+                    <th>Created at</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in sales_data %}
+                <tr>
+                    <td>{{ i[0] }}</td>
+                    <td>{{ i[1] }}</td>
+                    <td>{{ i[2] }}</td>
+                    <td>{{ i[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 {% endblock %}
