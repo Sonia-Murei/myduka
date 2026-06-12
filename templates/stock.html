@@ -8,6 +8,20 @@
 </div>
 
 <div>
+    <form action="/add_stocks" method="post">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Product ID</label>
+            <input type="text" name="pid" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Stock Quantity</label>
+            <input type="number" name="stock_qt" class="form-control" id="exampleInputPassword1">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Stock</button>
+    </form>
+</div>
+
+<div>
     <div>
         <div>
             <table id="example" class="table table-striped">
