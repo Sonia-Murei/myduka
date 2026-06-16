@@ -147,3 +147,14 @@ def  check_available_stock(pid):
     total_sold = cur.fetchone() [0] or 0
 
     return total_stock - total_sold
+
+def check_user_exists(email):
+    cur.execute("select * from user where email = %s"(email,))
+    user = cur.fetchone()
+    return user
+
+def create_user(user_details):
+    cur.execute("insert into users(full_name,email,phone_number,password)values(%s,%s,%s,%s)",user_details)
+    conn.commit()
+
+    # user_details is already a tuple, hence no comma after it on cur.execute()
