@@ -84,7 +84,7 @@ def dashboard():
 
 @app.route('/register',methods=['GET','POST'])
 def register():
-    if request.form == 'POST':
+    if request.method == 'POST':
         full_name = request.form['full_name']
         email = request.form['email']
         phone_number = request.form['phone']

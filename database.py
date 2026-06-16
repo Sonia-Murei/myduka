@@ -149,7 +149,7 @@ def  check_available_stock(pid):
     return total_stock - total_sold
 
 def check_user_exists(email):
-    cur.execute("select * from user where email = %s"(email,))
+    cur.execute("select * from users where email = %s",(email,))
     user = cur.fetchone()
     return user
 
