@@ -7,18 +7,48 @@
     <p>This is the sales page</p>
 </div>
 
+
 <div>
-    <form action="/add_sales" method="post">
-        <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Product ID</label>
-            <input type="text" name="pid" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Make Sale
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Making Sales</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form action="/add_sales" method="post">
+                            <div>
+                                <select class="form-select" aria-label="Default select example" name="pid">
+                                    <option selected>Select a Product</option>
+                                    {% for product in products %}
+                                    <option value="{{ product[0] }}">{{ product[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Quantity</label>
+                                <input type="number" name="qt" class="form-control" id="exampleInputPassword1">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Make Sale</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Quantity</label>
-            <input type="number" name="qt" class="form-control" id="exampleInputPassword1">
-        </div>
-        <button type="submit" class="btn btn-primary">Add Sale</button>
-    </form>
+    </div>
 </div>
 
 <div>
@@ -46,5 +76,8 @@
         </table>
     </div>
 </div>
+
+
+
 
 {% endblock %}

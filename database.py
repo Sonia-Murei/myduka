@@ -138,3 +138,12 @@ def profit_per_product():
 """)
     product_profit=cur.fetchall()
     return product_profit
+
+def  check_available_stock(pid):
+    cur.execute("select sum(stock.stock_quantity) from stock where pid = %s",(pid,))
+    total_stock = cur.fetchone() [0] or 0 # [0] extracts the first value of the tuple fetchone()
+
+    cur.execute("select sum(sales.quantity) from sales where pid = %s",(pid,))
+    total_sold = cur.fetchone() [0] or 0
+
+    return total_stock - total_sold
