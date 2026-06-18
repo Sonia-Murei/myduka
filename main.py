@@ -1,6 +1,7 @@
-from flask import Flask, render_template,request,redirect,url_for,flash
-from database import get_products,get_sales,get_stocks,insert_products,insert_sales,insert_stock, check_available_stock,check_user_exists,create_user
+from flask import Flask, render_template,request,redirect,url_for,flash,session
+from database import get_products,get_sales,get_stocks,insert_products,insert_sales,insert_stock, check_available_stock,check_user_exists,create_user,sales_per_day,sales_per_product,profit_per_day,profit_per_product
 from flask_bcrypt import Bcrypt
+from functools import wraps
 
 # Flask Instance : because "app" is an object and an object is an instance of a class.
 # "Flask" is a class
@@ -16,7 +17,17 @@ def home():
     number=100
     return render_template("index.html", x = number)
 
+def login_required(f):
+    @wraps(f) #Decorator function. 'f' represents any function you want to protect
+    def protected(*args,**kwargs):
+        if 'email' not in session:
+            return redirect(url_for('login'))
+        return f(*args,**kwargs)
+    return protected
+
+
 @app.route('/products')
+@login_required
 def products():
     products_data=get_products()
     return render_template("products.html", products_data = products_data)
@@ -35,6 +46,7 @@ def add_products():
     return redirect(url_for('products'))
 
 @app.route('/sales')
+@login_required
 def sales():
     sales_data=get_sales()
     products=get_products()
@@ -61,6 +73,7 @@ def add_sales():
     
 
 @app.route('/stock')
+@login_required
 def stock():
     stocks_data=get_stocks()
     products=get_products()
@@ -79,8 +92,28 @@ def add_stocks():
     return redirect(url_for('stock'))
 
 @app.route('/dashboard')
+@login_required
 def dashboard():
-    return render_template("dashboard.html")
+    product_sales = sales_per_product()
+    product_profit = profit_per_product()
+
+    daily_sales = sales_per_day()
+    daily_profit = profit_per_day()
+
+    # Product data
+    product_names = [i[0] for i in product_sales]
+    prod_profit = [i[1] for i in product_profit]
+    prod_sales = [i[1] for i in product_sales]
+
+    # Days data
+    dates = [i[0] for i in daily_sales]
+    day_sales = [i[1] for i in daily_sales]
+    day_profit = [i[1] for i in daily_profit]
+
+    return render_template("dashboard.html",
+                           product_names = product_names, prod_profit = prod_profit, prod_sales = prod_sales,
+                           dates = dates, day_sales = day_sales, day_profit = day_profit
+                           )
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -104,9 +137,30 @@ def register():
 
     return render_template("register.html")
 
-@app.route('/login')
+@app.route('/login',methods=['GET','POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        registered_user = check_user_exists(email)
+        if not registered_user:
+            flash("User doesn't exist, please register",'danger')
+        else:
+            if bcryp.check_password_hash(registered_user[-1],password):
+                session['email'] = email
+                flash("Login successful",'success')
+                return redirect(url_for('dashboard'))
+            else:
+                flash("Incorrect password, try again",'danger')
+                
     return render_template("login.html")
+
+@app.route('/logout')
+def logout():
+    session.pop('email',None)
+    flash("Logged out successfully",'success')
+    return redirect(url_for('login'))
 
 # Run your application
 app.run()
