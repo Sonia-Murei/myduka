@@ -8,12 +8,68 @@
 </div>
 
 <div>
-    <p>{{ product_names }}</p>
-    <p>{{ prod_profit }}</p>
-    <p>{{ prod_sales }}</p>
-    <p>{{ dates }}</p>
-    <p>{{ day_sales }}</p>
-    <p>{{ day_profit }}</p>
+    <div>
+        <canvas id="line-chart" width="800" height="450"></canvas>
+    </div>
+
+    <div>
+        <canvas id="bar-chart-grouped" width="800" height="450"></canvas>
+    </div>
+   
 </div>
+
+<script>
+    // Line Chart
+new Chart(document.getElementById("line-chart"), {
+  type: 'line',
+  data: {
+    labels: {{ dates | safe}},
+    datasets: [{ 
+        data: {{ day_sales | safe }},
+        label: "Sales per Day",
+        borderColor: "#3e95cd",
+        fill: false
+      }, { 
+        data: {{ day_profit | safe}},
+        label: "Profit per Day",
+        borderColor: "#8e5ea2",
+        fill: false
+      },
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Sales and Profit per day'
+    }
+  }
+});
+
+
+// Bar Chart
+new Chart(document.getElementById("bar-chart-grouped"), {
+    type: 'bar',
+    data: {
+      labels: {{ product_names | safe }},
+      datasets: [
+        {
+          label: "Sales per Product",
+          backgroundColor: "#3e95cd",
+          data: {{ prod_sales | safe }}
+        }, {
+          label: "Profit per Product",
+          backgroundColor: "#8e5ea2",
+          data: {{ prod_profit | safe }}
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Sales and Profit per Product(Ksh.)'
+      }
+    }
+});
+</script>
 
 {% endblock %}

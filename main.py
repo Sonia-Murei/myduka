@@ -102,13 +102,13 @@ def dashboard():
 
     # Product data
     product_names = [i[0] for i in product_sales]
-    prod_profit = [i[1] for i in product_profit]
-    prod_sales = [i[1] for i in product_sales]
+    prod_profit = [float(i[1]) for i in product_profit]
+    prod_sales = [float(i[1]) for i in product_sales]
 
     # Days data
-    dates = [i[0] for i in daily_sales]
-    day_sales = [i[1] for i in daily_sales]
-    day_profit = [i[1] for i in daily_profit]
+    dates = [str(i[0]) for i in daily_sales]
+    day_sales = [float(i[1]) for i in daily_sales]
+    day_profit = [float(i[1]) for i in daily_profit]
 
     return render_template("dashboard.html",
                            product_names = product_names, prod_profit = prod_profit, prod_sales = prod_sales,
